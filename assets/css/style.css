@@ -17,6 +17,14 @@ label{
   justify-content: center;
 }
 
+.loading{
+  font-size: 16px;
+  text-align: center;
+}
+.loading.is-none{
+  display: none;
+}
+
 #video{
   position: absolute;
   top: 0;

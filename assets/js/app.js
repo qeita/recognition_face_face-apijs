@@ -11,14 +11,15 @@
   let isLoadedMetaData = false
   let constraints = { audio: false, video: {facingMode: 'user'} }
 
+  const loadingTxt = document.querySelector('.loading')
   let modelLoaded = false
 
   async function start(){
     if(!modelLoaded){
       await faceapi.loadTinyYolov2Model('./assets/models/')
       modelLoaded = true
+      loadingTxt.classList.add('is-none')
     }
-    isVideoRun = true
     navigator.mediaDevices.getUserMedia( constraints )
       .then( mediaStrmSuccess )
       .catch( mediaStrmFailed )
@@ -44,7 +45,6 @@
   }
 
   function stop(){
-    isVideoRun = false
     let stream = video.srcObject
     let tracks = stream.getTracks()
 
@@ -55,8 +55,9 @@
   }
 
   function draw(){
-    if(!isVideoRun) return
-    detectFace()
+    if(isVideoRun){
+      detectFace()
+    }
     requestAnimationFrame( draw )
   }
 
@@ -120,6 +121,7 @@
     let result = await faceapi.tinyYolov2(video, forwardParams)
 
     ctx.drawImage(video, 0, 0)
+
     faceapi.drawDetection('canvas', result.map(det => det.forSize(width, height)))
   }
 
